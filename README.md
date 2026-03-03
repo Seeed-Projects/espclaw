@@ -11,7 +11,7 @@ ESP-IDF 5.5 AI assistant firmware for ESP32-C3 / C5 / S3.
 
 ## Demo
 
-Uploading esp32c5.mp4…
+[Uploading esp32c5.mp4…](https://github.com/user-attachments/assets/4ca20a3d-8336-4232-ae38-6b1f12aa64bc)
 
 ## Supported Targets
 
