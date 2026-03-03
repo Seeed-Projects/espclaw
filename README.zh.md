@@ -9,6 +9,10 @@
 
 基于 ESP-IDF 5.5 的纯 C AI 助手固件，支持 ESP32-C3 / C5 / S3。
 
+## 演示
+
+<video src="media/esp32c5.mp4" width="100%" controls></video>
+
 ## 支持的目标芯片
 
 | 目标 | 核心数 | PSRAM | Flash | 配置档 |
