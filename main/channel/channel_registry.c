@@ -51,6 +51,10 @@ extern const channel_ops_t pushplus_channel_ops;
 extern const channel_ops_t bark_channel_ops;
 #endif
 
+#ifdef CONFIG_ESPCLAW_CHANNEL_MQTT
+extern const channel_ops_t mqtt_channel_ops;
+#endif
+
 /* Channel registry array (conditionally populated) */
 static const channel_ops_t *s_channels[] = {
     /* Bidirectional channels */
@@ -82,6 +86,9 @@ static const channel_ops_t *s_channels[] = {
 #endif
 #ifdef CONFIG_ESPCLAW_CHANNEL_BARK
     &bark_channel_ops,
+#endif
+#ifdef CONFIG_ESPCLAW_CHANNEL_MQTT
+    &mqtt_channel_ops,
 #endif
 };
 

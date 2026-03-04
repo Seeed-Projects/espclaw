@@ -23,6 +23,7 @@ typedef enum {
     MSG_SOURCE_LARK      = 9,   /* One-way notification */
     MSG_SOURCE_PUSHPLUS  = 10,  /* One-way notification */
     MSG_SOURCE_BARK      = 11,  /* One-way notification */
+    MSG_SOURCE_MQTT      = 12,  /* Bidirectional IoT control */
 } message_source_t;
 
 /* Inbound message (any channel -> agent) */

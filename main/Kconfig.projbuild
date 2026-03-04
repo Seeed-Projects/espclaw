@@ -257,6 +257,47 @@ menu "ESPClaw Configuration"
                 Custom Bark server URL (for self-hosted).
                 Default: https://api.day.app
 
+        # ---------------------------------------------------------------------
+        # MQTT Channel (bidirectional IoT control)
+        # ---------------------------------------------------------------------
+        config ESPCLAW_CHANNEL_MQTT
+            bool "Enable MQTT Channel"
+            default n
+            help
+                MQTT channel for bidirectional IoT communication.
+                Subscribe to commands and publish responses via MQTT broker.
+                Perfect for integration with Home Assistant, Node-RED, etc.
+
+        config ESPCLAW_MQTT_BROKER_URL
+            string "MQTT Broker URL"
+            default "mqtt://broker.emqx.io"
+            depends on ESPCLAW_CHANNEL_MQTT
+            help
+                MQTT broker URL. Formats:
+                  - mqtt://broker.example.com:1883 (plain TCP)
+                  - mqtts://broker.example.com:8883 (TLS)
+                  - ws://broker.example.com:8080 (WebSocket)
+                  - wss://broker.example.com:8084 (WebSocket + TLS)
+
+                Public test brokers:
+                  - mqtt://broker.emqx.io
+                  - mqtt://test.mosquitto.org
+                  - mqtt://broker.hivemq.com
+
+        config ESPCLAW_MQTT_USERNAME
+            string "MQTT Username (optional)"
+            default ""
+            depends on ESPCLAW_CHANNEL_MQTT
+            help
+                MQTT username for authentication. Leave empty for anonymous.
+
+        config ESPCLAW_MQTT_PASSWORD
+            string "MQTT Password (optional)"
+            default ""
+            depends on ESPCLAW_CHANNEL_MQTT
+            help
+                MQTT password for authentication. Leave empty if not needed.
+
     endmenu
 
     menu "GPIO Tool Safety"

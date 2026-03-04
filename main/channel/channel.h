@@ -67,4 +67,14 @@ void pushplus_post(const char *text);
 void bark_post(const char *text);
 #endif
 
+/* --- MQTT Channel (bidirectional IoT control) --- */
+
+#ifdef CONFIG_ESPCLAW_CHANNEL_MQTT
+void mqtt_post(const char *text);
+bool mqtt_is_connected(void);
+const char *mqtt_get_client_id(void);
+const char *mqtt_get_cmd_topic(void);
+const char *mqtt_get_response_topic(void);
+#endif
+
 #endif /* CHANNEL_H */

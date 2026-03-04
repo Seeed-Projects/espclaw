@@ -149,7 +149,7 @@ espclaw> 删除所有任务
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │                        Channels (条件编译)                           │
-│  Serial │ Telegram │ DingTalk │ Discord │ Slack │ WeCom │ ...     │
+│  Serial │ Telegram │ MQTT │ DingTalk │ Discord │ Slack │ ...     │
 └─────────────────────────────┬───────────────────────────────────────┘
                               │
                     ┌─────────▼─────────┐
@@ -199,6 +199,7 @@ espclaw> 删除所有任务
 | | Lark | `channel_lark.c` | 飞书机器人 (签名验证) 🔄 开发中 |
 | | Pushplus | `channel_pushplus.c` | 推送加服务 🔄 开发中 |
 | | Bark | `channel_bark.c` | iOS 推送通知 🔄 开发中 |
+| | MQTT | `channel_mqtt.c` | IoT 标准协议 (双向) 🔄 开发中 |
 | **Agent** | ReAct Loop | `agent/agent_loop.c` | 多轮工具调用循环 ✅ |
 | | Session | `agent/session.c` | 对话历史管理 ✅ |
 | | Context | `agent/context_builder.c` | 系统提示词组装 ✅ |
@@ -262,7 +263,8 @@ main/
 │   ├── channel_wecom.c    # 企业微信
 │   ├── channel_lark.c     # 飞书
 │   ├── channel_pushplus.c # 推送加
-│   └── channel_bark.c     # iOS 推送
+│   ├── channel_bark.c     # iOS 推送
+│   └── channel_mqtt.c     # MQTT IoT 控制
 │
 ├── provider/
 │   ├── provider.h         # Provider vtable

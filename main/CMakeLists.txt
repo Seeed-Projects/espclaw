@@ -82,6 +82,11 @@ if(CONFIG_ESPCLAW_CHANNEL_BARK)
     message(STATUS "ESPClaw: Bark channel enabled")
 endif()
 
+if(CONFIG_ESPCLAW_CHANNEL_MQTT)
+    list(APPEND SRCS "channel/channel_mqtt.c")
+    message(STATUS "ESPClaw: MQTT channel enabled")
+endif()
+
 idf_component_register(
     SRCS ${SRCS}
     INCLUDE_DIRS "."
@@ -89,4 +94,5 @@ idf_component_register(
         nvs_flash esp_event esp_timer esp_netif
         esp_wifi driver
         esp_http_client esp-tls mbedtls
+        mqtt
 )
