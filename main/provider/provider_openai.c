@@ -237,7 +237,7 @@ static esp_err_t openai_complete(
     esp_http_client_handle_t client = esp_http_client_init(&cfg);
     if (!client) { free(body); free(resp); return ESP_FAIL; }
 
-    esp_http_client_set_header(client, "content-type", "application/json");
+    esp_http_client_set_header(client, "content-type", "application/json; charset=utf-8");
     if (s_bearer_auth) {
         char auth_val[LLM_API_KEY_BUF_SIZE + 8];
         snprintf(auth_val, sizeof(auth_val), "Bearer %s", s_api_key);

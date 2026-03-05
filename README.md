@@ -116,7 +116,7 @@ ESPClaw provides local commands that are handled immediately without calling the
 | Command | Description |
 |---------|-------------|
 | `/help` | Show available commands |
-| `/tools` | List registered tools (16 tools) |
+| `/tools` | List registered tools (17 tools) |
 | `/heap` | Show free heap memory |
 | `/gpio` | Show allowed GPIO pin range |
 | `/reset` | Software reset |
@@ -125,7 +125,7 @@ Any other input is sent to the LLM agent for processing.
 
 ## Features
 
-### Built-in Tools (16 total)
+### Built-in Tools (17 total)
 
 | Category | Tools |
 |----------|-------|
@@ -230,7 +230,7 @@ espclaw> cancel all tasks
 | **Util** | JSON | `util/json_util.c` | 轻量 JSON 解析 (无 cJSON) ✅ |
 | | HTTP | `util/http_client.c` | HTTPS 客户端封装 ✅ |
 
-### Tools Detail (16 total)
+### Tools Detail (17 total)
 
 | 工具名 | 参数 | 功能 |
 |--------|------|------|
@@ -249,6 +249,7 @@ espclaw> cancel all tasks
 | `get_diagnostics` | - | 获取系统诊断信息 |
 | `set_persona` | `persona` | 设置 AI 人格 (neutral/friendly/technical/witty) |
 | `get_persona` | - | 获取当前 AI 人格设置 |
+| `wifi_scan` | - | 扫描附近 WiFi 网络（会短暂断网）|
 
 ### File Structure
 
@@ -295,6 +296,7 @@ main/
 │   ├── tool_cron.c        # 定时任务工具
 │   └── tool_system.c      # 系统诊断
 │   ├── tool_persona.c     # AI 人格切换
+│   ├── tool_network.c     # 网络扫描
 │
 ├── service/
 │   ├── cron_service.h/.c  # 定时任务服务
