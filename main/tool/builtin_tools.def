@@ -8,138 +8,134 @@
 
 /* GPIO */
 TOOL_ENTRY("gpio_write",
-    "Set a GPIO pin HIGH or LOW. Controls LEDs, relays, outputs.",
+    "Set GPIO pin HIGH/LOW",
     "{\"type\":\"object\",\"properties\":{"
-      "\"pin\":{\"type\":\"integer\",\"description\":\"GPIO pin (allowed range configured in firmware)\"},"
-      "\"state\":{\"type\":\"integer\",\"description\":\"0=LOW, 1=HIGH\"}},"
+      "\"pin\":{\"type\":\"integer\"},"
+      "\"state\":{\"type\":\"integer\",\"description\":\"0=LOW,1=HIGH\"}},"
     "\"required\":[\"pin\",\"state\"]}",
     tool_gpio_write)
 
 TOOL_ENTRY("gpio_read",
-    "Read current state of a GPIO pin. Returns HIGH or LOW.",
+    "Read GPIO pin state",
     "{\"type\":\"object\",\"properties\":{"
-      "\"pin\":{\"type\":\"integer\",\"description\":\"GPIO pin to read\"}},"
+      "\"pin\":{\"type\":\"integer\"}},"
     "\"required\":[\"pin\"]}",
     tool_gpio_read)
 
 TOOL_ENTRY("gpio_read_all",
-    "Read all allowed GPIO pin states in one call.",
+    "Read all GPIO pin states",
     "{\"type\":\"object\",\"properties\":{}}",
     tool_gpio_read_all)
 
 TOOL_ENTRY("delay",
-    "Wait for specified milliseconds (max 60000). Use between GPIO operations for timing, like blinking LEDs.",
+    "Wait N milliseconds (max 60000)",
     "{\"type\":\"object\",\"properties\":{"
-      "\"milliseconds\":{\"type\":\"integer\",\"description\":\"Time to wait in ms (max 60000)\"}},"
+      "\"milliseconds\":{\"type\":\"integer\"}},"
     "\"required\":[\"milliseconds\"]}",
     tool_delay)
 
 /* Persistent memory */
 TOOL_ENTRY("memory_set",
-    "Store a value in persistent NVS memory. Key must start with u_.",
+    "Store key-value in NVS. Key must start with u_",
     "{\"type\":\"object\",\"properties\":{"
-      "\"key\":{\"type\":\"string\",\"description\":\"Key (max 15 chars, must start with u_)\"},"
-      "\"value\":{\"type\":\"string\",\"description\":\"Value to store\"}},"
+      "\"key\":{\"type\":\"string\"},"
+      "\"value\":{\"type\":\"string\"}},"
     "\"required\":[\"key\",\"value\"]}",
     tool_memory_set)
 
 TOOL_ENTRY("memory_get",
-    "Retrieve a value from persistent NVS memory. Key must start with u_.",
+    "Get value from NVS by key (u_*)",
     "{\"type\":\"object\",\"properties\":{"
-      "\"key\":{\"type\":\"string\",\"description\":\"Key to retrieve (must start with u_)\"}},"
+      "\"key\":{\"type\":\"string\"}},"
     "\"required\":[\"key\"]}",
     tool_memory_get)
 
 TOOL_ENTRY("memory_delete",
-    "Delete a key from persistent NVS memory. Key must start with u_.",
+    "Delete key from NVS (u_*)",
     "{\"type\":\"object\",\"properties\":{"
-      "\"key\":{\"type\":\"string\",\"description\":\"Key to delete (must start with u_)\"}},"
+      "\"key\":{\"type\":\"string\"}},"
     "\"required\":[\"key\"]}",
     tool_memory_delete)
 
 TOOL_ENTRY("memory_list",
-    "List all user memory keys (u_*). Shows what data has been stored.",
+    "List all user memory keys",
     "{\"type\":\"object\",\"properties\":{}}",
     tool_memory_list)
 
 /* System diagnostics */
 TOOL_ENTRY("get_diagnostics",
-    "Get device health: free heap, uptime, chip info, allowed GPIO pins.",
+    "Get heap, uptime, chip info",
     "{\"type\":\"object\",\"properties\":{}}",
     tool_system_diagnostics)
 
 TOOL_ENTRY("get_version",
-    "Get firmware version and build info.",
+    "Get firmware version",
     "{\"type\":\"object\",\"properties\":{}}",
     tool_get_version)
 
 /* Cron - scheduled tasks */
 TOOL_ENTRY("cron_schedule",
-    "Create a scheduled task. Types: periodic (every N seconds), daily (at specific time), once (after N seconds). Minimum interval: 10 seconds.",
+    "Schedule task: periodic/daily/once",
     "{\"type\":\"object\",\"properties\":{"
-      "\"type\":{\"type\":\"string\",\"enum\":[\"periodic\",\"daily\",\"once\"],"
-        "\"description\":\"Task type: periodic=repeat, daily=at specific time, once=one-time\"},"
-      "\"action\":{\"type\":\"string\",\"description\":\"What to do when triggered\"},"
-      "\"interval_seconds\":{\"type\":\"integer\",\"minimum\":10,\"description\":\"For periodic: repeat every N seconds (min 10)\"},"
-      "\"interval_minutes\":{\"type\":\"integer\",\"description\":\"For periodic: repeat every N minutes (converted to seconds)\"},"
-      "\"hour\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":23,\"description\":\"For daily: hour (0-23)\"},"
-      "\"minute\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":59,\"description\":\"For daily: minute (0-59)\"},"
-      "\"delay_seconds\":{\"type\":\"integer\",\"minimum\":10,\"description\":\"For once: trigger after N seconds (min 10)\"},"
-      "\"delay_minutes\":{\"type\":\"integer\",\"description\":\"For once: trigger after N minutes (converted to seconds)\"}},"
+      "\"type\":{\"type\":\"string\",\"enum\":[\"periodic\",\"daily\",\"once\"]},"
+      "\"action\":{\"type\":\"string\"},"
+      "\"interval_seconds\":{\"type\":\"integer\"},"
+      "\"hour\":{\"type\":\"integer\"},"
+      "\"minute\":{\"type\":\"integer\"},"
+      "\"delay_seconds\":{\"type\":\"integer\"}},"
     "\"required\":[\"type\",\"action\"]}",
     tool_cron_schedule)
 
 TOOL_ENTRY("cron_list",
-    "List all scheduled tasks",
+    "List scheduled tasks",
     "{\"type\":\"object\",\"properties\":{}}",
     tool_cron_list)
 
 TOOL_ENTRY("cron_cancel",
-    "Cancel a scheduled task by ID",
+    "Cancel task by ID",
     "{\"type\":\"object\",\"properties\":{"
-      "\"id\":{\"type\":\"integer\",\"description\":\"Task ID to cancel\" } },"
+      "\"id\":{\"type\":\"integer\"}},"
     "\"required\":[\"id\"]}",
     tool_cron_cancel)
 
 TOOL_ENTRY("cron_cancel_all",
-    "Cancel ALL scheduled tasks at once",
+    "Cancel all scheduled tasks",
     "{\"type\":\"object\",\"properties\":{}}",
     tool_cron_cancel_all)
 
 /* Time */
 TOOL_ENTRY("get_time",
-    "Get current time, timezone, and NTP sync status",
+    "Get current time and timezone",
     "{\"type\":\"object\",\"properties\":{}}",
     tool_get_time)
 
 TOOL_ENTRY("set_timezone",
-    "Set timezone (e.g., UTC, Asia/Shanghai, America/New_York)",
+    "Set timezone (e.g. CST-8, UTC)",
     "{\"type\":\"object\",\"properties\":{"
-      "\"timezone\":{\"type\":\"string\",\"description\":\"Timezone name or POSIX format\"}"
-      "},\"required\":[\"timezone\"]}",
+      "\"timezone\":{\"type\":\"string\"}},"
+    "\"required\":[\"timezone\"]}",
     tool_set_timezone)
 
-
-/* Persona (personality) control */
+/* Persona */
 TOOL_ENTRY("set_persona",
-    "Change the AI's personality style. Options: neutral, friendly, technical, witty.",
+    "Set AI style: neutral/friendly/technical/witty",
     "{\"type\":\"object\",\"properties\":{"
-      "\"persona\":{\"type\":\"string\",\"description\":\"Persona name: neutral, friendly, technical, or witty\"}"
-      "},\"required\":[\"persona\"]}",
+      "\"persona\":{\"type\":\"string\"}},"
+    "\"required\":[\"persona\"]}",
     set_persona_exec)
 
 TOOL_ENTRY("get_persona",
-    "Get the current AI persona (personality style) setting.",
+    "Get current AI persona",
     "{\"type\":\"object\",\"properties\":{}}",
     get_persona_exec)
 
-/* Network tools */
+/* Network */
 TOOL_ENTRY("wifi_scan",
-    "Scan nearby WiFi networks. Returns SSID, signal strength, channel, and security type. WARNING: This will disconnect from WiFi for 2-5 seconds, so you will lose connection to the LLM temporarily. Always warn the user before calling this tool!",
+    "Scan WiFi networks (disconnects briefly!)",
     "{\"type\":\"object\",\"properties\":{}}",
     tool_wifi_scan)
 
 TOOL_ENTRY("get_network_info",
-    "Get current network status: IP address, gateway, netmask, DNS, WiFi signal strength, MAC address, SSID, channel. Use this when user asks about IP, network status, or connection info.",
+    "Get IP, gateway, DNS, RSSI, MAC, SSID",
     "{\"type\":\"object\",\"properties\":{}}",
     tool_get_network_info)

@@ -84,7 +84,7 @@ static void agent_task(void *arg)
     outbound_msg_t out;
 
     char *msgs_json   = ESPCLAW_MALLOC(LLM_REQUEST_BUF_SIZE);
-    char *tools_json  = ESPCLAW_MALLOC(LLM_REQUEST_BUF_SIZE / 2);
+    char *tools_json  = ESPCLAW_MALLOC(LLM_REQUEST_BUF_SIZE);
     char *reply       = ESPCLAW_MALLOC(LLM_RESPONSE_BUF_SIZE);
     char *sys_prompt  = ESPCLAW_MALLOC(SYSTEM_PROMPT_BUF_SIZE);
     char *tool_id     = malloc(64);
@@ -102,7 +102,7 @@ static void agent_task(void *arg)
     tool_registry_init();
 
     /* Build tools JSON once (static table, doesn't change at runtime) */
-    if (tool_registry_build_tools_json(tools_json, LLM_REQUEST_BUF_SIZE / 2) < 0) {
+    if (tool_registry_build_tools_json(tools_json, LLM_REQUEST_BUF_SIZE) < 0) {
         ESP_LOGW(TAG, "tools JSON truncated");
         tools_json[0] = '\0';
     }
