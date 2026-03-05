@@ -14,7 +14,9 @@ Pure C AI assistant firmware for ESP32-C3 / C5 / S3. Runs a ReAct agent with 20 
 
 ## Demo
 
-[Uploading esp32c5.mp4...](https://github.com/user-attachments/assets/4ca20a3d-8336-4232-ae38-6b1f12aa64bc)
+[Serial](https://github.com/user-attachments/assets/4ca20a3d-8336-4232-ae38-6b1f12aa64bc)
+
+[chat](https://github.com/user-attachments/assets/6e035a13-102d-4a67-9170-0a83a2695f84)
 
 ### Persistent Memory
 
