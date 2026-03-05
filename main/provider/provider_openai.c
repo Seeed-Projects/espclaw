@@ -4,6 +4,7 @@
  * POST /v1/chat/completions  {"model":..., "messages":[...]}
  */
 #include "provider.h"
+#include "platform.h"
 #include "config.h"
 #include "tool/tool_registry.h"
 #include "esp_http_client.h"
@@ -218,8 +219,14 @@ static esp_err_t openai_complete(
     ESP_LOGI(TAG, "Request body (%d bytes): %.500s%s", len, body,
              len > 500 ? "..." : "");
 
+    if (!espclaw_tls_lock(pdMS_TO_TICKS(60000))) {
+        ESP_LOGW(TAG, "TLS lock timeout");
+        free(body);
+        return ESP_ERR_TIMEOUT;
+    }
+
     char *resp = malloc(LLM_RESPONSE_BUF_SIZE);
-    if (!resp) { free(body); return ESP_ERR_NO_MEM; }
+    if (!resp) { espclaw_tls_unlock(); free(body); return ESP_ERR_NO_MEM; }
 
     http_ctx_t ctx = { .buf = resp, .buf_sz = LLM_RESPONSE_BUF_SIZE };
 
@@ -231,11 +238,11 @@ static esp_err_t openai_complete(
         .event_handler    = http_event_handler,
         .user_data        = &ctx,
         .buffer_size      = 2048,
-        .buffer_size_tx   = LLM_REQUEST_BUF_SIZE,
+        .buffer_size_tx   = 2048,
     };
 
     esp_http_client_handle_t client = esp_http_client_init(&cfg);
-    if (!client) { free(body); free(resp); return ESP_FAIL; }
+    if (!client) { espclaw_tls_unlock(); free(body); free(resp); return ESP_FAIL; }
 
     esp_http_client_set_header(client, "content-type", "application/json; charset=utf-8");
     if (s_bearer_auth) {
@@ -256,6 +263,7 @@ static esp_err_t openai_complete(
     }
     
     esp_http_client_cleanup(client);
+    espclaw_tls_unlock();
     free(body);
 
     if (err != ESP_OK || status != 200) {

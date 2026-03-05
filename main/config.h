@@ -28,8 +28,8 @@
   #define SESSION_HISTORY_SIZE     32768   /* 32KB session .jsonl */
 #else
   /* C3: tight buffers, all from internal SRAM */
-  #define LLM_REQUEST_BUF_SIZE     12288   /* 12KB */
-  #define LLM_RESPONSE_BUF_SIZE    16384   /* 16KB */
+  #define LLM_REQUEST_BUF_SIZE     8192    /* 8KB — actual request ~6.5KB */
+  #define LLM_RESPONSE_BUF_SIZE    8192    /* 8KB — embedded responses are concise */
   #define CHANNEL_RX_BUF_SIZE      512
   #define CHANNEL_TX_BUF_SIZE      1024
   #define TOOL_RESULT_BUF_SIZE     512
@@ -45,7 +45,7 @@
 #if ESPCLAW_HAS_PSRAM
   #define MAX_HISTORY_TURNS        24
 #else
-  #define MAX_HISTORY_TURNS        12
+  #define MAX_HISTORY_TURNS        8
 #endif
 
 /* -----------------------------------------------------------------------
@@ -64,6 +64,7 @@
   #define AGENT_TASK_STACK_SIZE    12288
   #define CHANNEL_TASK_STACK_SIZE  8192
   #define TG_POLL_TASK_STACK_SIZE  12288
+  #define TG_OUTPUT_TASK_STACK_SIZE 12288
   #define OUTBOUND_TASK_STACK_SIZE 8192
   #define CRON_TASK_STACK_SIZE     8192
   #define BOOT_OK_TASK_STACK_SIZE  4096
@@ -72,7 +73,8 @@
 #else
   #define AGENT_TASK_STACK_SIZE    8192
   #define CHANNEL_TASK_STACK_SIZE  4096
-  #define TG_POLL_TASK_STACK_SIZE  4096
+  #define TG_POLL_TASK_STACK_SIZE  8192
+  #define TG_OUTPUT_TASK_STACK_SIZE 8192  /* Needs extra space for 4KB msg buffer */
   #define OUTBOUND_TASK_STACK_SIZE 4096
   #define CRON_TASK_STACK_SIZE     4096
   #define BOOT_OK_TASK_STACK_SIZE  4096
@@ -93,7 +95,7 @@
  * ----------------------------------------------------------------------- */
 #define INPUT_QUEUE_LENGTH         8
 #define OUTPUT_QUEUE_LENGTH        8
-#define TELEGRAM_OUTPUT_QUEUE_LENGTH 4
+#define TELEGRAM_OUTPUT_QUEUE_LENGTH 2
 
 /* -----------------------------------------------------------------------
  * LLM Backend Configuration
@@ -164,11 +166,22 @@ typedef enum {
  * Telegram
  * ----------------------------------------------------------------------- */
 #define TELEGRAM_API_URL         "https://api.telegram.org/bot"
-#define TELEGRAM_POLL_TIMEOUT    30
-#define TELEGRAM_POLL_TIMEOUT_OPENROUTER 8
+#define TELEGRAM_POLL_TIMEOUT    5       /* Short poll to free heap quickly */
+#define TELEGRAM_POLL_TIMEOUT_OPENROUTER 5
+#define TELEGRAM_POLL_INTERVAL   500     /* ms between poll attempts */
 #define TELEGRAM_MAX_MSG_LEN     4096
 #define TELEGRAM_FLUSH_ON_START  1
 #define START_COMMAND_COOLDOWN_MS 30000
+#define TELEGRAM_MAX_ALLOWED_CHAT_IDS 4
+#define TELEGRAM_HTTP_TIMEOUT_MS 10000   /* Poll timeout + margin */
+/* Exponential backoff */
+#define TELEGRAM_BACKOFF_BASE_MS      5000    /* 5 seconds */
+#define TELEGRAM_BACKOFF_MAX_MS      300000    /* 5 minutes */
+#define TELEGRAM_BACKOFF_MULTIPLIER  2
+/* Stale poll detection and auto-resync */
+#define TELEGRAM_STALE_POLL_LOG_INTERVAL 4       /* Log every N stale-only polls */
+#define TELEGRAM_STALE_POLL_RESYNC_STREAK 8      /* Trigger auto-resync after this streak */
+#define TELEGRAM_STALE_POLL_RESYNC_COOLDOWN_MS 60000 /* Min gap between auto-resync attempts */
 
 /* -----------------------------------------------------------------------
  * WebSocket (S3 only)
@@ -182,7 +195,7 @@ typedef enum {
  * Cron
  * ----------------------------------------------------------------------- */
 #define CRON_CHECK_INTERVAL_MS   10000
-#define CRON_MAX_ENTRIES         16
+#define CRON_MAX_ENTRIES         10
 #define CRON_MAX_ACTION_LEN      256
 #define CRON_TASK_STACK_SIZE     4096
 #define CRON_TASK_PRIORITY       4

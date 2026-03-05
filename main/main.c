@@ -37,6 +37,9 @@
 static const char *TAG = "espclaw";
 static message_bus_t s_bus;
 
+/* Global TLS mutex instance */
+SemaphoreHandle_t g_tls_mutex = NULL;
+
 void app_main(void)
 {
     /* 1. Banner */
@@ -58,7 +61,10 @@ void app_main(void)
         return;
     }
 
-    /* 2.5 Rate limiter init */
+    /* 2.5 TLS mutex init */
+    espclaw_tls_init();
+
+    /* 2.6 Rate limiter init */
     ratelimit_init();
 
     /* 2.6 Persona init (load from NVS) */

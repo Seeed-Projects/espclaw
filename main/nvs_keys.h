@@ -18,6 +18,7 @@
 /* Telegram */
 #define NVS_KEY_TG_TOKEN         "tg_token"
 #define NVS_KEY_TG_CHAT_IDS      "tg_chat_ids"
+#define NVS_KEY_TG_OFFSET        "tg_offset"
 
 /* Persona */
 #define NVS_KEY_PERSONA          "persona"

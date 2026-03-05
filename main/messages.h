@@ -48,11 +48,11 @@ typedef struct {
 
 /* Conversation message (for history tracking in agent loop) */
 typedef struct {
-    char role[16];              /* "user", "assistant" */
+    char role[12];              /* "user", "assistant" */
     char content[MAX_MESSAGE_LEN];
     bool is_tool_use;
     bool is_tool_result;
-    char tool_id[64];
+    char tool_id[24];
     char tool_name[32];
 } conversation_msg_t;
 

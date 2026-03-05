@@ -44,6 +44,7 @@ endif()
 
 if(CONFIG_ESPCLAW_CHANNEL_TELEGRAM)
     list(APPEND SRCS "channel/channel_telegram.c")
+    list(APPEND SRCS "channel/telegram_helpers.c")
     message(STATUS "ESPClaw: Telegram channel enabled")
 endif()
 
@@ -95,5 +96,5 @@ idf_component_register(
         nvs_flash esp_event esp_timer esp_netif
         esp_wifi driver
         esp_http_client esp-tls mbedtls
-        mqtt
+        mqtt json
 )

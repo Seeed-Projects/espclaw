@@ -160,10 +160,20 @@ static void serial_output_task(void *arg)
 
     while (1) {
         if (xQueueReceive(s_bus->outbound, &msg, portMAX_DELAY) == pdTRUE) {
-            if (msg.target == MSG_SOURCE_SERIAL) {
+            switch (msg.target) {
+            case MSG_SOURCE_SERIAL:
                 printf("%s\n", msg.text);
                 printf("espclaw> ");
                 fflush(stdout);
+                break;
+#ifdef CONFIG_ESPCLAW_CHANNEL_TELEGRAM
+            case MSG_SOURCE_TELEGRAM:
+                telegram_post(msg.text, msg.chat_id);
+                break;
+#endif
+            default:
+                ESP_LOGW(TAG, "Unknown outbound target: %d", msg.target);
+                break;
             }
         }
     }

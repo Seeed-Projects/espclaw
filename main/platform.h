@@ -97,4 +97,24 @@
  * ----------------------------------------------------------------------- */
 #define ARRAY_SIZE(a)  (sizeof(a) / sizeof((a)[0]))
 
+/* -----------------------------------------------------------------------
+ * Global TLS mutex — serializes HTTPS connections on low-memory targets
+ * to prevent concurrent mbedTLS sessions from exhausting heap.
+ * Call espclaw_tls_init() once at startup.
+ * ----------------------------------------------------------------------- */
+#include "freertos/FreeRTOS.h"
+#include "freertos/semphr.h"
+
+extern SemaphoreHandle_t g_tls_mutex;
+
+static inline void espclaw_tls_init(void) {
+    if (!g_tls_mutex) g_tls_mutex = xSemaphoreCreateMutex();
+}
+static inline bool espclaw_tls_lock(TickType_t wait) {
+    return g_tls_mutex && xSemaphoreTake(g_tls_mutex, wait) == pdTRUE;
+}
+static inline void espclaw_tls_unlock(void) {
+    if (g_tls_mutex) xSemaphoreGive(g_tls_mutex);
+}
+
 #endif /* PLATFORM_H */
