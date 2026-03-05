@@ -13,6 +13,7 @@
 #include "channel/channel.h"
 #include "channel/telegram_helpers.h"
 #include "bus/message_bus.h"
+#include "platform.h"
 #include "messages.h"
 #include "config.h"
 #include "nvs_keys.h"
@@ -372,6 +373,11 @@ static int get_backoff_delay_ms(void)
 
 static esp_err_t tg_http_get(const char *url, http_ctx_t *ctx)
 {
+    /* Global TLS lock: only one TLS session at a time (LLM or Telegram) */
+    if (!espclaw_tls_lock(pdMS_TO_TICKS(15000))) {
+        ESP_LOGW(TAG, "TLS lock timeout (GET)");
+        return ESP_ERR_TIMEOUT;
+    }
     xSemaphoreTake(s_tg_http_mutex, portMAX_DELAY);
 
     esp_http_client_config_t cfg = {
@@ -387,6 +393,7 @@ static esp_err_t tg_http_get(const char *url, http_ctx_t *ctx)
     esp_http_client_handle_t client = esp_http_client_init(&cfg);
     if (!client) {
         xSemaphoreGive(s_tg_http_mutex);
+        espclaw_tls_unlock();
         return ESP_FAIL;
     }
 
@@ -394,6 +401,7 @@ static esp_err_t tg_http_get(const char *url, http_ctx_t *ctx)
     int status = esp_http_client_get_status_code(client);
     esp_http_client_cleanup(client);
     xSemaphoreGive(s_tg_http_mutex);
+    espclaw_tls_unlock();
 
     if (err != ESP_OK || status != 200) {
         ESP_LOGW(TAG, "GET failed: err=%s status=%d", esp_err_to_name(err), status);
@@ -409,6 +417,10 @@ static esp_err_t tg_http_get(const char *url, http_ctx_t *ctx)
 
 static esp_err_t tg_http_post(const char *url, const char *body, http_ctx_t *ctx)
 {
+    if (!espclaw_tls_lock(pdMS_TO_TICKS(15000))) {
+        ESP_LOGW(TAG, "TLS lock timeout (POST)");
+        return ESP_ERR_TIMEOUT;
+    }
     xSemaphoreTake(s_tg_http_mutex, portMAX_DELAY);
 
     esp_http_client_config_t cfg = {
@@ -424,6 +436,7 @@ static esp_err_t tg_http_post(const char *url, const char *body, http_ctx_t *ctx
     esp_http_client_handle_t client = esp_http_client_init(&cfg);
     if (!client) {
         xSemaphoreGive(s_tg_http_mutex);
+        espclaw_tls_unlock();
         return ESP_FAIL;
     }
 
@@ -434,6 +447,7 @@ static esp_err_t tg_http_post(const char *url, const char *body, http_ctx_t *ctx
     int status = esp_http_client_get_status_code(client);
     esp_http_client_cleanup(client);
     xSemaphoreGive(s_tg_http_mutex);
+    espclaw_tls_unlock();
 
     if (err != ESP_OK || status != 200) {
         ESP_LOGW(TAG, "POST failed: err=%s status=%d", esp_err_to_name(err), status);

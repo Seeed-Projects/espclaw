@@ -228,6 +228,7 @@ static esp_err_t openai_complete(
     char *resp = malloc(LLM_RESPONSE_BUF_SIZE);
     if (!resp) { espclaw_tls_unlock(); free(body); return ESP_ERR_NO_MEM; }
 
+    resp[0] = '\0';
     http_ctx_t ctx = { .buf = resp, .buf_sz = LLM_RESPONSE_BUF_SIZE };
 
     esp_http_client_config_t cfg = {
