@@ -27,6 +27,13 @@ TOOL_ENTRY("gpio_read_all",
     "{\"type\":\"object\",\"properties\":{}}",
     tool_gpio_read_all)
 
+TOOL_ENTRY("delay",
+    "Wait for specified milliseconds (max 60000). Use between GPIO operations for timing, like blinking LEDs.",
+    "{\"type\":\"object\",\"properties\":{"
+      "\"milliseconds\":{\"type\":\"integer\",\"description\":\"Time to wait in ms (max 60000)\"}},"
+    "\"required\":[\"milliseconds\"]}",
+    tool_delay)
+
 /* Persistent memory */
 TOOL_ENTRY("memory_set",
     "Store a value in persistent NVS memory. Key must start with u_.",
@@ -50,11 +57,21 @@ TOOL_ENTRY("memory_delete",
     "\"required\":[\"key\"]}",
     tool_memory_delete)
 
+TOOL_ENTRY("memory_list",
+    "List all user memory keys (u_*). Shows what data has been stored.",
+    "{\"type\":\"object\",\"properties\":{}}",
+    tool_memory_list)
+
 /* System diagnostics */
 TOOL_ENTRY("get_diagnostics",
     "Get device health: free heap, uptime, chip info, allowed GPIO pins.",
     "{\"type\":\"object\",\"properties\":{}}",
     tool_system_diagnostics)
+
+TOOL_ENTRY("get_version",
+    "Get firmware version and build info.",
+    "{\"type\":\"object\",\"properties\":{}}",
+    tool_get_version)
 
 /* Cron - scheduled tasks */
 TOOL_ENTRY("cron_schedule",
