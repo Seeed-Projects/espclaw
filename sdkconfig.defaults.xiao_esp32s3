@@ -1,0 +1,36 @@
+# ESPClaw for Seeed XIAO ESP32S3
+# Hardware: 8MB Flash + 8MB Octal PSRAM (ESP32-S3R8)
+# Target: dual-core Xtensa LX7 @ 240MHz
+# Ref: https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/api-guides/flash_psram_config.html
+
+# Flash configuration (Quad mode, 80MHz)
+CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y
+CONFIG_ESPTOOLPY_FLASHFREQ_80M=y
+# Note: XIAO uses Quad Flash + Octal PSRAM (F4R8 configuration)
+
+# Performance optimization
+CONFIG_COMPILER_OPTIMIZATION_PERF=y
+
+# PSRAM - Octal mode (8MB PSRAM uses Octal/DDR mode)
+# F4R8 hardware: 80MHz SDR Flash + 80MHz DDR PSRAM
+CONFIG_SPIRAM=y
+CONFIG_SPIRAM_MODE_OCT=y
+# Octal PSRAM uses DDR mode automatically
+
+# Memory allocation strategy
+CONFIG_SPIRAM_USE_MALLOC=y
+CONFIG_SPIRAM_MALLOC_ALWAYSINTERNAL=16384
+
+# Larger buffers with PSRAM
+CONFIG_MBEDTLS_SSL_IN_CONTENT_LEN=32768
+CONFIG_MBEDTLS_SSL_OUT_CONTENT_LEN=16384
+
+# Task stacks
+CONFIG_ESP_MAIN_TASK_STACK_SIZE=16384
+CONFIG_ESP_SYSTEM_EVENT_TASK_STACK_SIZE=8192
+
+# Partition table: 8MB with OTA support
+CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions_8mb_ota.csv"
+
+# Enable HTTP server for WebSocket gateway
+CONFIG_ESP_HTTPS_SERVER_ENABLE=y
