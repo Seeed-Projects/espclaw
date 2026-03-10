@@ -6,16 +6,13 @@
 # Flash configuration (Quad mode, 80MHz)
 CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y
 CONFIG_ESPTOOLPY_FLASHFREQ_80M=y
-# Note: XIAO uses Quad Flash + Octal PSRAM (F4R8 configuration)
 
 # Performance optimization
 CONFIG_COMPILER_OPTIMIZATION_PERF=y
 
 # PSRAM - Octal mode (8MB PSRAM uses Octal/DDR mode)
-# F4R8 hardware: 80MHz SDR Flash + 80MHz DDR PSRAM
 CONFIG_SPIRAM=y
 CONFIG_SPIRAM_MODE_OCT=y
-# Octal PSRAM uses DDR mode automatically
 
 # Memory allocation strategy
 CONFIG_SPIRAM_USE_MALLOC=y
@@ -34,3 +31,14 @@ CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions_8mb_ota.csv"
 
 # Enable HTTP server for WebSocket gateway
 CONFIG_ESP_HTTPS_SERVER_ENABLE=y
+
+# Disable unused features to save flash (~100KB)
+CONFIG_ESP_WIFI_SOFTAP_SUPPORT=n
+CONFIG_LWIP_IPV6=n
+CONFIG_BT_ENABLED=n
+CONFIG_OPENTHREAD_ENABLED=n
+CONFIG_IEEE802154_ENABLED=n
+CONFIG_ESP_COREDUMP_ENABLE=n
+CONFIG_ESP_GDB_SUPPORT=n
+CONFIG_LOG_DEFAULT_LEVEL_WARN=y
+CONFIG_LOG_DEFAULT_LEVEL=2

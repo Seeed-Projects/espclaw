@@ -1,24 +1,42 @@
-# ESPClaw shared defaults (all targets)
+# ESPClaw for Seeed XIAO ESP32C5
+# Hardware: 8MB Flash + 8MB Quad PSRAM
+# Target: single-core RISC-V @ 240MHz, WiFi 6 (dual-band)
+# Ref: https://docs.espressif.com/projects/esp-idf/en/stable/esp32c5/api-guides/external-ram.html
 
-# Watchdog - allow long LLM API calls
-CONFIG_ESP_TASK_WDT_TIMEOUT_S=60
+# Flash configuration
+CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y
+CONFIG_ESPTOOLPY_FLASHFREQ_80M=y
 
-# Log level
-CONFIG_LOG_DEFAULT_LEVEL_INFO=y
+# Performance optimization
+CONFIG_COMPILER_OPTIMIZATION_PERF=y
 
-# FreeRTOS
-CONFIG_FREERTOS_HZ=100
+# PSRAM - Quad mode (ESP32-C5 only supports Quad SPI PSRAM)
+CONFIG_SPIRAM=y
+CONFIG_SPIRAM_MODE_QUAD=y
+CONFIG_SPIRAM_SPEED_40M=y
 
-# HTTP client
-CONFIG_ESP_HTTP_CLIENT_ENABLE_HTTPS=y
+# Memory allocation strategy
+CONFIG_SPIRAM_USE_MALLOC=y
+CONFIG_SPIRAM_MALLOC_ALWAYSINTERNAL=16384
 
-# TLS certificate bundle
-CONFIG_MBEDTLS_CERTIFICATE_BUNDLE=y
-CONFIG_MBEDTLS_CERTIFICATE_BUNDLE_DEFAULT_CMN=y
+# TLS buffers with PSRAM
+CONFIG_MBEDTLS_SSL_IN_CONTENT_LEN=32768
+CONFIG_MBEDTLS_SSL_OUT_CONTENT_LEN=16384
 
-# NVS encryption - disabled for now, enable in Step 8 (production)
-# CONFIG_NVS_ENCRYPTION=y
+# Task stacks
+CONFIG_ESP_MAIN_TASK_STACK_SIZE=12288
+CONFIG_ESP_SYSTEM_EVENT_TASK_STACK_SIZE=4096
 
-# Partition table (default to 4MB; overridden by sdkconfig.defaults.esp32s3)
-CONFIG_PARTITION_TABLE_CUSTOM=y
-CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions_4mb.csv"
+# Partition table: 8MB with OTA support
+CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions_8mb_ota.csv"
+
+# Disable unused features to save flash (~100KB)
+CONFIG_ESP_WIFI_SOFTAP_SUPPORT=n
+CONFIG_LWIP_IPV6=n
+CONFIG_BT_ENABLED=n
+CONFIG_OPENTHREAD_ENABLED=n
+CONFIG_IEEE802154_ENABLED=n
+CONFIG_ESP_COREDUMP_ENABLE=n
+CONFIG_ESP_GDB_SUPPORT=n
+CONFIG_LOG_DEFAULT_LEVEL_WARN=y
+CONFIG_LOG_DEFAULT_LEVEL=2
