@@ -29,3 +29,7 @@ venv/
 secrets.env
 *.key
 nvs_partition*.bin
+.current_board
+
+# User configuration (local only)
+sdkconfig.user

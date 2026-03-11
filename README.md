@@ -40,9 +40,54 @@ ESPClaw supports bidirectional MQTT communication for IoT integration (Home Assi
 
 > **Note:** ESP32-S3 without PSRAM runs in MINIMAL mode (same as C3/C5). With 8MB PSRAM, it unlocks FULL features (LittleFS, WebSocket, HTTP proxy).
 
+### Supported Boards
+
+See [BOARDS.md](BOARDS.md) for detailed board configurations and memory optimization settings.
+
+| Board | Chip | Flash | PSRAM | Config |
+|-------|------|-------|-------|--------|
+| XIAO ESP32C3 | C3 | 4MB | - | `xiao_c3` |
+| XIAO ESP32C5 | C5 | 8MB | 8MB Quad | `xiao_c5` |
+| XIAO ESP32C6 | C6 | 4MB | - | `xiao_c6` |
+| XIAO ESP32S3 | S3 | 8MB | 8MB Octal | `xiao_s3` |
+| XIAO ESP32S3 Sense | S3 | 8MB | 8MB Octal | `xiao_s3_sense` |
+| XIAO ESP32S3 Plus | S3 | 16MB | 8MB Octal | `xiao_s3_plus` |
+
 ## Quick Start
 
+### Using Build Script (Recommended)
+
 ```bash
+# XIAO ESP32S3 Plus (16MB Flash + 8MB Octal PSRAM) - Recommended
+./build.sh xiao_s3_plus flash
+
+# XIAO ESP32S3 Sense (8MB Flash + 8MB PSRAM + SD Card + Camera)
+./build.sh xiao_s3_sense flash
+
+# XIAO ESP32S3 (8MB Flash + 8MB Octal PSRAM)
+./build.sh xiao_s3 flash
+
+# XIAO ESP32C5 (8MB Flash + 8MB Quad PSRAM, WiFi 6)
+./build.sh xiao_c5 flash
+
+# XIAO ESP32C6 (4MB Flash, WiFi 6)
+./build.sh xiao_c6 flash
+
+# XIAO ESP32C3 (4MB Flash, no PSRAM)
+./build.sh xiao_c3 flash
+
+# Generic ESP32 boards
+./build.sh s3 flash    # ESP32-S3 DevKit
+./build.sh c5 flash    # ESP32-C5 DevKit
+./build.sh c3 flash    # ESP32-C3 DevKit
+```
+
+### Manual Build
+
+```bash
+# Erase flash before first flash or after switching boards (clears old NVS config)
+idf.py -D SDKCONFIG=sdkconfig.xiao_c3 erase-flash
+
 # Set target (first time or after switching)
 idf.py set-target esp32s3   # or esp32c3 / esp32c5
 
@@ -306,6 +351,21 @@ main/
 ## WiFi Notes
 
 **ESP32-C5:** Requires WPA2-PSK or WPA2/WPA3 mixed mode on your router. "WPA only" mode will cause authentication failures.
+
+### Troubleshooting
+
+**WiFi Connection Failed (reason=201):**
+
+1. **Stale NVS config** - Old WiFi credentials in NVS override new settings
+   ```bash
+   idf.py -D SDKCONFIG=sdkconfig.xiao_c3 erase-flash
+   ```
+
+2. **5GHz network** - ESP32 only supports 2.4GHz, ensure your router has 2.4GHz band
+
+3. **SSID not visible** - Verify network name is correct (case-sensitive)
+
+**Quick test:** Use your phone's hotspot (enable "Maximize Compatibility" on iPhone) to verify the code works.
 
 ## Development Plan
 
