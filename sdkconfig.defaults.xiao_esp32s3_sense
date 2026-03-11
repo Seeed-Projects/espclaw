@@ -1,7 +1,7 @@
-# ESPClaw for Seeed XIAO ESP32S3 (标准版)
-# Hardware: 8MB Flash + 8MB Octal PSRAM (ESP32-S3R8)
+# ESPClaw for Seeed XIAO ESP32S3 Sense (带摄像头和SD卡槽)
+# Hardware: 8MB Flash + 8MB Octal PSRAM + SD Card Slot (32GB FAT)
 # Target: dual-core Xtensa LX7 @ 240MHz
-# Ref: https://wiki.seeedstudio.com/xiao_esp32s3_getting_started/
+# Ref: https://wiki.seeedstudio.com/xiao_esp32s3sense_getting_started/
 
 # Flash configuration (Quad mode, 80MHz)
 CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y
@@ -18,7 +18,7 @@ CONFIG_SPIRAM_MODE_OCT=y
 CONFIG_SPIRAM_USE_MALLOC=y
 CONFIG_SPIRAM_MALLOC_ALWAYSINTERNAL=16384
 
-# Larger buffers with PSRAM
+# Larger buffers with PSRAM (Sense has camera, needs more memory)
 CONFIG_MBEDTLS_SSL_IN_CONTENT_LEN=32768
 CONFIG_MBEDTLS_SSL_OUT_CONTENT_LEN=16384
 
@@ -31,6 +31,9 @@ CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions_8mb_ota.csv"
 
 # Enable HTTP server for WebSocket gateway
 CONFIG_ESP_HTTPS_SERVER_ENABLE=y
+
+# SD Card support (Sense has SD card slot)
+CONFIG_FATFS_LONG_FILENAMES=y
 
 # Disable unused features to save flash
 CONFIG_ESP_WIFI_SOFTAP_SUPPORT=n

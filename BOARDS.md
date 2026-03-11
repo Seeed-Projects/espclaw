@@ -4,12 +4,14 @@
 
 ### Seeed XIAO 系列（官方规格）
 
-| 板子 | 芯片 | Flash | PSRAM | SRAM | 配置文件 |
+| 板子 | 芯片 | Flash | PSRAM | 特性 | 配置文件 |
 |------|------|-------|-------|------|----------|
-| XIAO ESP32C3 | C3 | 4MB | ❌ 无 | 400KB | `sdkconfig.defaults.xiao_esp32c3` |
-| XIAO ESP32C5 | C5 | 8MB | ✅ 8MB Quad | 384KB | `sdkconfig.defaults.xiao_esp32c5` |
-| XIAO ESP32C6 | C6 | 4MB | ❌ 无 | 512KB | `sdkconfig.defaults.xiao_esp32c6` |
-| XIAO ESP32S3 | S3 | 8MB | ✅ 8MB Octal | 512KB | `sdkconfig.defaults.xiao_esp32s3` |
+| XIAO ESP32C3 | C3 | 4MB | ❌ 无 | 基础版 | `sdkconfig.defaults.xiao_esp32c3` |
+| XIAO ESP32C5 | C5 | 8MB | ✅ 8MB Quad | WiFi 6 | `sdkconfig.defaults.xiao_esp32c5` |
+| XIAO ESP32C6 | C6 | 4MB | ❌ 无 | WiFi 6 | `sdkconfig.defaults.xiao_esp32c6` |
+| **XIAO ESP32S3** | S3 | **8MB** | ✅ 8MB Octal | 标准版 | `sdkconfig.defaults.xiao_esp32s3` |
+| **XIAO ESP32S3 Sense** | S3 | **8MB** | ✅ 8MB Octal | 摄像头+SD卡 | `sdkconfig.defaults.xiao_esp32s3_sense` |
+| **XIAO ESP32S3 Plus** | S3 | **16MB** | ✅ 8MB Octal | 大容量 | `sdkconfig.defaults.xiao_esp32s3_plus` |
 
 ### 通用 ESP32 开发板
 
@@ -24,13 +26,19 @@
 ### 使用构建脚本（推荐）
 
 ```bash
-# XIAO ESP32S3 (8MB Flash + 8MB Octal PSRAM) - 推荐
+# XIAO ESP32S3 Plus (16MB Flash + 8MB Octal PSRAM) - 推荐，功能最全
+./build.sh xiao_s3_plus flash
+
+# XIAO ESP32S3 Sense (8MB Flash + 8MB PSRAM + SD卡 + 摄像头)
+./build.sh xiao_s3_sense flash
+
+# XIAO ESP32S3 标准版 (8MB Flash + 8MB PSRAM)
 ./build.sh xiao_s3 flash
 
-# XIAO ESP32C5 (8MB Flash + 8MB Quad PSRAM)
+# XIAO ESP32C5 (8MB Flash + 8MB Quad PSRAM, WiFi 6)
 ./build.sh xiao_c5 flash
 
-# XIAO ESP32C6 (4MB Flash, 无 PSRAM)
+# XIAO ESP32C6 (4MB Flash, WiFi 6)
 ./build.sh xiao_c6 flash
 
 # XIAO ESP32C3 (4MB Flash, 无 PSRAM)
@@ -63,22 +71,24 @@ idf.py -p /dev/ttyACM0 build flash monitor
 | 工具调用 | 5 | 10 | 10 |
 | TLS In/Out | 16/4 KB | 32/16 KB | 32/16 KB |
 | OTA | ❌ | ✅ | ✅ |
-| LittleFS | ❌ | ✅ | ✅ |
+| LittleFS | ❌ | ✅ | ✅ (16MB Plus) |
 
 ### PSRAM 类型说明
 
 | 芯片 | PSRAM 模式 | 速度 | 说明 |
 |------|-----------|------|------|
 | C5 | Quad SPI (STR) | 40MHz | 仅支持 Quad 模式 |
-| S3 | Octal SPI (DDR) | 80MHz | F4R8 配置：Quad Flash + Octal PSRAM |
+| S3 | Octal SPI (DDR) | 80MHz | F4R8/F8R8 配置 |
 
-### XIAO ESP32S3 特殊配置
+### XIAO ESP32S3 系列对比
 
-XIAO ESP32S3 使用 **F4R8** 配置：
-- **F4**: Quad SPI Flash @ 80MHz SDR
-- **R8**: Octal PSRAM @ 80MHz DDR
+| 型号 | Flash | PSRAM | SD卡 | 摄像头 | 推荐场景 |
+|------|-------|-------|------|--------|----------|
+| **标准版** | 8MB | 8MB Octal | ❌ | ❌ | 基础使用 |
+| **Sense** | 8MB | 8MB Octal | ✅ | ✅ | 图像/存储 |
+| **Plus** | 16MB | 8MB Octal | ❌ | ❌ | OTA + 文件系统 |
 
-根据 ESP-IDF 官方文档，这是 Group B 的安全组合。
+**推荐：XIAO ESP32S3 Plus** - 16MB Flash 支持完整的 OTA + LittleFS 功能。
 
 ## 自定义配置
 
