@@ -12,6 +12,10 @@
 
 基于 ESP-IDF 5.5 的纯 C AI 助手固件，在 $2 的 ESP32-C3/C5/S3 上运行 ReAct Agent，20 个工具 + 10 个通知通道，无需 PSRAM。
 
+<p align="center">
+  <img src="media/wechat_group.JPG" width="180" alt="微信群二维码">
+</p>
+
 ## 演示
 
 <video src="https://github.com/tianrking/espclaw/raw/main/media/esp32c5.mp4" width="100%" controls></video>

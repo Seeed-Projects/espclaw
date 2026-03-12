@@ -12,6 +12,10 @@
 
 Pure C AI assistant firmware for ESP32-C3 / C5 / S3. Runs a ReAct agent with 20 tools and 10 notification channels on a $2 microcontroller with no PSRAM.
 
+<p align="center">
+  <img src="media/wechat_group.JPG" width="180" alt="WeChat Group QR Code">
+</p>
+
 ## Demo
 
 [Serial](https://github.com/user-attachments/assets/4ca20a3d-8336-4232-ae38-6b1f12aa64bc)
